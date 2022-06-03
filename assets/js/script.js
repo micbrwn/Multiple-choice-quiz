@@ -1,29 +1,9 @@
-// start game--start timer
-// Reaveal queastion
-// Reveal answer
-// subtract time for wrong answer
-// highscore
-//input
-//store
 
 
-
-// if(localStorage.getItem("highscores")){
-//     highscoreHistory = JSON.parse(localStorage.getItem("highscores"));
-// }
-
-// function addNewScore () {
-//     var newScore = {
-//         initials: "PJ",
-//         score: 100
-//     }
-//     highscoreHistory.push(newScore)
-//     localStorage.setItem("highscores", JSON.stringify(highscoreHistory))
-// }
 
 var quizQuestions = [
     {
-        question: "JavaScript code can be written in ___.",
+        question: "JavaScript code can be written in _____.",
         answers: ['JavaScript file (.js file)', 'HTML document directly', 'JavaScript file and in HTML document directly', 'In style sheets (.css file)'],
         correctAnswer: 'JavaScript file and in HTML document directly'
     },
@@ -69,7 +49,7 @@ var quizQuestions = [
     },
     {
         question: 'Which JavaScript operator is used to determine the type of a variable?',
-        answers: ["typeof", 'TypeOf', 'typeOf', 'Typeof'], 
+        answers: ["typeof", 'TypeOf', 'typeOf', 'Typeof'],
         correctAnswer: "typeof"
     }
 ];
@@ -81,39 +61,44 @@ var startBtn = document.getElementById('start-btn');
 var checkResult = document.getElementById('check-answer');
 var finalScore = document.getElementById('final-score');
 var timer = document.getElementById('timer');
-var highscoreHistory = [];
+var initials = document.getElementById('initials');
+var submitInitials = document.getElementById('submitinitals');
+var form = document.getElementById('form');
+var localStorageName = "value"
+var highscoresEl = document.getElementById('highscores');
+var input = document.getElementById('input');
+var highscores;
+var highscoreHistory = "";
 var timeRemaining = 90;
 var index = 0;
 var correct = 0;
-var timerInterval = 0;
+
 
 //start quiz, start timer, show first question.
-//create addeventlistener for each possible answer
 
 function startQuiz() {
     startBtn.setAttribute('disabled', 'true');
     quizArea.classList.remove("hidden");
-    // choices.classList.remove('hidden');
     timerStart();
     showQuestions();
 }
 
 function timerStart() {
-   
-console.log(timerStart);
-  
-    var quizInterval = setInterval(function() {
+
+    console.log(timerStart);
+
+    var quizInterval = setInterval(function () {
         timeRemaining--;
         timer.textContent = timeRemaining;
 
         if (timeRemaining <= 0) {
             clearInterval(quizInterval);
-            if (index <  quizQuestions.length - 1) {
-                // clearInterval(quizInterval);
+            if (index < quizQuestions.length - 1) {
+                
                 quizOver();
             }
         }
-    
+
     }, 1000);
 
     showQuestions();
@@ -128,57 +113,93 @@ function showQuestions() {
     question.textContent = currentQuestion.question;
     choices.innerHTML = ""
     currentQuestion.answers.forEach(
-        (answer) => { 
-// create an element 
-// add answer text to it
-// append it to page
-        var item = document.createElement("button")
-
-        item.addEventListener("click", function(event) {
-            checkAnswer(currentQuestion, event)
-        });
+        (answer) => {
+            // create an element 
+            // add answer text to it
+            // append it to page
+            var item = document.createElement("button")
+            item.classList.add('button')
+            item.addEventListener("click", function (event) {
+                checkAnswer(currentQuestion, event)
+            });
 
             item.textContent = answer;
-        choices.appendChild(item);   
+            choices.appendChild(item);
         }
-    )   
+    )
 }
 
 function checkAnswer(question, event) {
     console.log("event.target", event.target)
-// compare answer clicked to correct answer for question
+    // compare answer clicked to correct answer for question
 
-console.log(question.correctAnswer);
-console.log(event.target.textContent);
-if (question.correctAnswer === event.target.textContent) {
-    // if correct, add to score, and move to next question
-    checkResult.textContent = 'Correct';
-    correct++;
-}   else {
-    timeRemaining -= 10;
-    checkResult.textContent = 'Incorrect';
-    
-}
-// if not correct, deduct time and move to next question
+    console.log(question.correctAnswer);
+    console.log(event.target.textContent);
+    if (question.correctAnswer === event.target.textContent) {
+        // if correct, add to score, and move to next question
+        checkResult.textContent = 'Correct';
+        correct++;
+    } else {
+        timeRemaining -= 10;
+        checkResult.textContent = 'Incorrect';
+    }
+    // if not correct, deduct time and move to next question
 
-index++;
- if (index < quizQuestions.length) {
-    showQuestions();
- }  else {
-     quizOver();
- }
+    index++;
+    if (index < quizQuestions.length) {
+        showQuestions();
+    } else {
+        quizOver();
+    }
 }
+
+function setHighScore(event) {
+    event.preventDefault();
+    console.log(input.value);
+
+    // console.log(highscores);
+   
+    var highscore = {
+        initials: input.value,
+        score: correct
+    }
+    console.log(highscore);
+
+    highscores = JSON.parse(localStorage.getItem('highscores')) || [];
+    highscores.push(highscore);
+    localStorage.setItem('highscores', JSON.stringify(highscores));
+
+    location.replace('./highscores.html')
+    // make a new score object with person initials and score
+    // put object into a highscores array
+    // put highscores array in localstorage
+}
+
+submitInitials.addEventListener('click', setHighScore);
 
 function quizOver() {
-    question.textContent = "";
-    // answer.textContent = "";
-    choices.textContent = "";
-    checkResult.textContent = "Quiz Complete!";
-    console.log(correct);
-    finalScore.textContent = ("You got " + correct + " questions correct!");
+    quizArea.style.display = "none";
+    // console.log(correct);
     timer.style.display = "none";
- 
+  
+    document.getElementById("final-score").innerHTML = "Final score:" + correct;
+    highscoresEl.style.display = "block";
+
+
+
+
+    // get initials from user input
+    // create object to store initials and final score
+    // retrieve existing localstorage highscores array  
+    // add new object to existing highscore array
+    // save highscores array to local storage json stringify
+    // redirect to highscore.html using window.location .href = "rel path to html", or .replace("rel path to highscore html") or .assign("rel path to highscore html")
+    
+    // console.log(finalScore);
+    // console.log("") //object from stored initials and final score
 }
+
+
 
 
 
@@ -190,8 +211,6 @@ function quizOver() {
 
 
 startBtn.addEventListener("click", startQuiz);
-
-
 
 
 

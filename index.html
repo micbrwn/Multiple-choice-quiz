@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>JavaScript Quiz</title>
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
-<body>
-  
+<header>
+    <h1>JavaScript Quiz</h1>
+</header>
+
+<body class="container">
+  <a href="./highscores.html">View highscores</a>
     <button id="start-btn">Start</button>
     <div id="quiz" class="hidden">
         <div id="question"></div>
@@ -18,9 +22,15 @@
         <div id="check-answer"></div>
     </div>
 
-    <div id="final-score"></div>
-    <div id="highscore">
-        <!-- input for user to add their initials -->
+    <div id="highscores">
+        <h2 id="final-score">Final</h2>
+        <form id="form" >
+            <p id="initials">Enter your initials </p>
+            <input id="input">
+            <button type="submit" id="submitinitals">Submit</button>
+
+            
+        </form>
     </div>
     <div id="timer">90</div>
     <script src="./assets/js/script.js"></script>
